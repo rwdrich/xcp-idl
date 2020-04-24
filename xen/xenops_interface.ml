@@ -451,8 +451,10 @@ module Dynamic = struct
 end
 
 module Host = struct
-  type cpu_info = {
-      cpu_count: int
+  type policy_array = string [@@deriving rpcty]
+
+  type cpu_info =
+    { cpu_count: int
     ; socket_count: int
     ; vendor: string
     ; speed: string
@@ -582,6 +584,10 @@ module XenopsAPI (R : RPC) = struct
     type cpu_features_array = int64 array [@@deriving rpcty]
     type policy_array = string [@@deriving rpcty]
 
+    let policy_system_index =
+      Param.mk ~description:["A system policy index"]
+        ~name:"policy_index" Types.int [@@deriving rpcty]
+
     let policy_p =
       Param.mk ~description:["A cpu policy"]
         ~name:"policy" policy_array
@@ -655,6 +661,12 @@ module XenopsAPI (R : RPC) = struct
       declare "HOST.policy_is_compatible" ["Find out if a vm policy is compatible with a host policy, also returns the intersection"]
         (
           debug_info_p @-> policy_p @-> policy_p @-> returning policy_compatibility_p err
+        )
+
+    let xc_cpu_policy_get_system =
+      declare "HOST.xc_cpu_policy_get_system" ["Retrieve a system cpu policy by index"]
+        (
+          debug_info_p @-> policy_system_index @-> returning policy_p err
         )
 
   end
