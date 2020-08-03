@@ -646,7 +646,7 @@ module XenopsAPI (R : RPC) = struct
 
     let upgrade_cpu_policy =
       let is_hvm_p = Param.mk ~name:"is_hvm" Types.bool in
-      declare "Host.upgrade_cpu_policy" ["Given an older cpu feature set, return an updated cpu policy"]
+      declare "HOST.upgrade_cpu_policy" ["Given an older cpu feature set, return an updated cpu policy"]
         (
             debug_info_p @-> policy_p @-> is_hvm_p @-> returning policy_p err
         )
